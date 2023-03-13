@@ -8,16 +8,20 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CreatePhotoDTO, UpdatePhotoDTO } from 'src/dto/photos.dto';
+import {
+  AssignPhotoDTO,
+  CreatePhotoDTO,
+  UpdatePhotoDTO,
+} from 'src/dto/photos.dto';
+import { Photo } from 'src/entity/photos.entity';
 import { PhotoService } from './photo.service';
-
 @Controller('photo')
 export class PhotoController {
   constructor(private photoService: PhotoService) {}
-  // @Get()
-  // async getProfiles(): Promise<Profile[]> {
-  //   return this.photoService.getAllProfiles();
-  // }
+  @Get()
+  async getProfiles(): Promise<Photo[]> {
+    return this.photoService.getAllPhotos();
+  }
   // @Get(':id')
   // async getOneProfile(@Param('id') uuid: string): Promise<Profile> {
   //   return this.photoService.getProfileById(uuid);
@@ -27,11 +31,12 @@ export class PhotoController {
     return this.photoService.addPhoto(request);
   }
   @Put(':id')
-  async updateProfile(
-    @Param('id') id: string,
-    @Body() request: UpdatePhotoDTO,
-  ) {
+  async updatePhoto(@Param('id') id: string, @Body() request: UpdatePhotoDTO) {
     return this.photoService.updatePhoto(id, request);
+  }
+  @Put('asign/:id')
+  async assignPhoto(@Param('id') id: string, @Body() request: AssignPhotoDTO) {
+    return this.photoService.asignPhoto(id, request);
   }
   // @Delete(':id')
   // async deleteProfile(@Param('id') uuid: string) {

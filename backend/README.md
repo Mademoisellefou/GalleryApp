@@ -107,3 +107,9 @@ _PUT localhost:3000/profile/1_
 {
   "name":"usrLib"
 }
+
+## _PUT localhost:5000/photo/asign/2_
+
+{
+  "photoId":"1"
+}

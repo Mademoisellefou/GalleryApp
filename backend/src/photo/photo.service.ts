@@ -4,6 +4,7 @@ import { CreatePhotoDTO, UpdatePhotoDTO } from 'src/dto/photos.dto';
 import { Photo } from 'src/entity/photos.entity';
 import { Repository } from 'typeorm';
 import { Profile } from 'src/entity/profiles.entity';
+import { AssignPhotoDTO } from 'src/dto/photos.dto';
 @Injectable()
 export class PhotoService {
   constructor(
@@ -13,9 +14,9 @@ export class PhotoService {
     private profileRepository: Repository<Profile>,
   ) {}
 
-  // public async getAllPhotos(): Promise<Photo[]> {
-  //   return this.photoRepository.find();
-  // }
+  public async getAllPhotos(): Promise<Photo[]> {
+    return this.photoRepository.find();
+  }
 
   // public async getPhotoById(id: string): Promise<Photo> {
   //   const photo = this.photoRepository.findOneBy({ id });
@@ -31,12 +32,25 @@ export class PhotoService {
     if (!photo) throw new Error('photo not found');
     return photo;
   }
+  public async getProfileById(id: string): Promise<Profile> {
+    const profile = this.profileRepository.findOneBy({ id });
+    if (!profile) throw new Error('profile not found');
+    return profile;
+  }
   public async updatePhoto(id: string, photo: UpdatePhotoDTO) {
     const myPhoto = await this.getPhotoById(id);
     if (!myPhoto) throw new Error('Photo not found');
-    console.log(myPhoto);
+    //console.log(myPhoto);
     myPhoto.url = photo.url;
     return this.photoRepository.save(myPhoto);
+  }
+  public async asignPhoto(profileId: string, photo: AssignPhotoDTO) {
+    const myPhoto = await this.getPhotoById(photo.photoId);
+    if (!myPhoto) throw new Error('Photo not found');
+    const myProfile = await this.getProfileById(profileId);
+    if (!myProfile) throw new Error('Profile not found');
+    myPhoto.profile = myProfile;
+    return this.photoRepository.update(photo.photoId, myPhoto);
   }
   public async addPhoto(request: CreatePhotoDTO): Promise<Photo> {
     const foundProfile = await this.profileRepository.findOneBy({

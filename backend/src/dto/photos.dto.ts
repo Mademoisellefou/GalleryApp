@@ -5,3 +5,6 @@ export class CreatePhotoDTO {
 export class UpdatePhotoDTO {
   url: string;
 }
+export class AssignPhotoDTO {
+  photoId: string;
+}

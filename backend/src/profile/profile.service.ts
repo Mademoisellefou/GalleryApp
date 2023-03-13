@@ -11,11 +11,11 @@ export class ProfileService {
     private profileRepository: Repository<Profile>,
   ) {}
 
-  // public async getProfileById(id: string): Promise<Profile> {
-  //   const profile = this.profileRepository.findOneBy({ id });
-  //   if (!profile) throw new Error('Profile not found');
-  //   return profile;
-  // }
+  public async getProfileById(id: string): Promise<Profile> {
+    const profile = this.profileRepository.findOneBy({ id });
+    if (!profile) throw new Error('Profile not found');
+    return profile;
+  }
 
   // public async deleteProfileById(uuid: string): Promise<void> {
   //   await this.profileRepository.delete(uuid);
