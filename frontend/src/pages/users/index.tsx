@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import axios from 'axios';
+import axios from "axios";
 type User = {
-    id:string;
+  id: string;
   name: string;
 };
 
@@ -10,9 +10,12 @@ function Index() {
   const [profiles, setProfiles] = useState<User[]>();
   const [valuePhoto, setValuePhoto] = useState<string>("");
   const allUsers = async () => {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/profile`)
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/profile`
+    );
     setProfiles(res.data);
   };
+
   const options = ["One", "Two", "Three", "Four", "Five"];
   const onOptionChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -20,8 +23,17 @@ function Index() {
     console.log("User Selected Value - ", event.target.value);
     setValuePhoto(event.target.value);
   };
-  const Asignar = (id:string) => {
-        console.log(id);
+  const Asignar = (id: string) => {
+    AsignPhoto(id);
+  };
+  const AsignPhoto = async (id: string) => {
+    const res = await axios({
+      method: "put",
+      url: `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/photo/asign/${id}`,
+      data: {
+        photoId: valuePhoto,
+      },
+    });
   };
   useEffect(() => {
     allUsers();

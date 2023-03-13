@@ -45,12 +45,14 @@ export class PhotoService {
     return this.photoRepository.save(myPhoto);
   }
   public async asignPhoto(profileId: string, photo: AssignPhotoDTO) {
-    const myPhoto = await this.getPhotoById(photo.photoId);
-    if (!myPhoto) throw new Error('Photo not found');
-    const myProfile = await this.getProfileById(profileId);
-    if (!myProfile) throw new Error('Profile not found');
-    myPhoto.profile = myProfile;
-    return this.photoRepository.update(photo.photoId, myPhoto);
+    console.log(profileId, photo);
+    return '';
+    // const myPhoto = await this.getPhotoById(photo.photoId);
+    // if (!myPhoto) throw new Error('Photo not found');
+    // const myProfile = await this.getProfileById(profileId);
+    // if (!myProfile) throw new Error('Profile not found');
+    // myPhoto.profile = myProfile;
+    // return this.photoRepository.update(photo.photoId, myPhoto);
   }
   public async addPhoto(request: CreatePhotoDTO): Promise<Photo> {
     const foundProfile = await this.profileRepository.findOneBy({
