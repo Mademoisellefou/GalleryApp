@@ -75,4 +75,19 @@ Nest is [MIT licensed](LICENSE).
 
 ### testing
 
-GET localhost:3000/profile
+### add photo 
+
+_POST localhost:3000/photo_
+
+{
+  "url":"url1",
+  "idprofile": "1"
+}
+
+### add profile
+
+_POST localhost:3000/profile_
+
+{
+  "name":"usrMel"
+}

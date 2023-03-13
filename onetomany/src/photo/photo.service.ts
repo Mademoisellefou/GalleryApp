@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePhotoDTO } from 'src/dto/photos.dto';
 import { Photo } from 'src/entity/photos.entity';
 import { Repository } from 'typeorm';
-import { Profile} from 'src/entity/profiles.entity'
+import { Profile } from 'src/entity/profiles.entity';
 @Injectable()
 export class PhotoService {
   constructor(
@@ -30,14 +30,19 @@ export class PhotoService {
   // public async updatePhoto(photo: CreatePhotoDTO): Promise<Photo> {
   //   return this.photoRepository.save(photo);
   // }
-  public async addPhoto(request : CreatePhotoDTO):Promise<Photo[]> {
-    const foundProfile= await this.profileRepository.findOneBy({id:request.idprofile});
-    // const profile = await this.profileRepository.findOne({id: request.idprofile});
-    console.log(foundProfile);
-    return this.photoRepository.find();
+  public async addPhoto(request: CreatePhotoDTO): Promise<Photo> {
+    const foundProfile = await this.profileRepository.findOneBy({
+      id: request.idprofile,
+    });
+    if (!foundProfile) throw new Error('Photo not found');
+    // console.log(foundProfile);
+    // return this.photoRepository.find();
     // newPhoto.url = request .url;
     // newPhoto.profile = profile;
-    // return this.photoRepo.save(newPhoto);
+    const newPhoto = new Photo();
+    newPhoto.url = request.url;
+    newPhoto.profile = foundProfile;
+    return this.photoRepository.save(newPhoto);
   }
   //   public async putPhotoById(uuid: string, photo: Partial<Photo>) {
   //     const myPhoto = await this.getPhotoById(uuid);
