@@ -31,7 +31,7 @@ export class PhotoController {
     @Param('id') id: string,
     @Body() request: UpdatePhotoDTO,
   ) {
-    return this.photoService.updatePhoto(id,request);
+    return this.photoService.updatePhoto(id, request);
   }
   // @Delete(':id')
   // async deleteProfile(@Param('id') uuid: string) {
