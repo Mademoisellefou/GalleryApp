@@ -92,7 +92,7 @@ _POST localhost:3000/profile_
   "name":"usrMel"
 }
 
-## update photo
+### update photo
 
 _PUT localhost:3000/photo/1_
 
@@ -100,7 +100,7 @@ _PUT localhost:3000/photo/1_
   "url":"url1changed"
 }
 
-## update profile
+### update profile
 
 _PUT localhost:3000/profile/1_
 
