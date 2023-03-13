@@ -77,39 +77,66 @@ Nest is [MIT licensed](LICENSE).
 
 ### add photo 
 
-_POST localhost:3000/photo_
-
+_POST localhost:5000/photo_
+```
 {
   "url":"url1",
   "idprofile": "1"
 }
-
+```
 ### add profile
 
-_POST localhost:3000/profile_
-
+_POST localhost:5000/profile_
+```
 {
   "name":"usrMel"
 }
-
+```
 ### update photo
 
-_PUT localhost:3000/photo/1_
-
+_PUT localhost:5000/photo/1_
+```
 {
   "url":"url1changed"
 }
-
+```
 ### update profile
 
-_PUT localhost:3000/profile/1_
+_PUT localhost:5000/profile/1_
 
+```
 {
   "name":"usrLib"
 }
+```
 
-## _PUT localhost:5000/photo/asign/2_
+###  Asign
 
+_PUT localhost:5000/photo/asign/2_
+
+```
 {
   "photoId":"1"
 }
+```
+### Get all Photos of users
+
+_GET localhost:5000/photo/allphotos_
+
+### Query 
+
+```
+select photo.id as autoId , photo.url as auto, photo."profileId" from photo left join profile on profile.id = photo.id order by photo."profileId";
+```
+
+equivalent  in ORM
+
+
+```
+ const result = await this.photoManager
+      .getRepository(Profile)
+      .createQueryBuilder('profile')
+      .leftJoinAndSelect('profile.photos', 'photo')
+      .getMany();
+```
+

@@ -38,6 +38,10 @@ export class PhotoController {
   async assignPhoto(@Param('id') id: string, @Body() request: AssignPhotoDTO) {
     return this.photoService.asignPhoto(id, request);
   }
+  @Get('allphotos')
+  async allPhotos() {
+    return this.photoService.getProfilesAndPhotos();
+  }
   // @Delete(':id')
   // async deleteProfile(@Param('id') uuid: string) {
   //   return this.photoService.deleteProfileById(uuid);

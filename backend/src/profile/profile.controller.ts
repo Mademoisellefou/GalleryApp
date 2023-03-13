@@ -15,11 +15,11 @@ import { ProfileService } from './profile.service';
 @Controller('profile')
 export class ProfileController {
   constructor(private profileService: ProfileService) {}
-
   @Get()
   async getProfiles(): Promise<Profile[]> {
     return this.profileService.getAllProfiles();
   }
+
   // @Get(':id')
   // async getOneProfile(@Param('id') uuid: string): Promise<Profile> {
   //   return this.profileService.getProfileById(uuid);

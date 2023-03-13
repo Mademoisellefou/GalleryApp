@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { CreatePhotoDTO, UpdatePhotoDTO } from 'src/dto/photos.dto';
 import { Photo } from 'src/entity/photos.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Profile } from 'src/entity/profiles.entity';
 import { AssignPhotoDTO } from 'src/dto/photos.dto';
 @Injectable()
@@ -12,12 +12,32 @@ export class PhotoService {
     private photoRepository: Repository<Photo>,
     @InjectRepository(Profile)
     private profileRepository: Repository<Profile>,
+    @InjectEntityManager() private photoManager: EntityManager,
   ) {}
-
+  public async getPhotosById(idProfile: string) {
+    const postWithEntityManager = await this.photoManager
+      .createQueryBuilder(Profile, 'profile')
+      .leftJoinAndSelect('profile.photos', 'photo')
+      .where('profile.id = :id', { id: idProfile })
+      .getOne();
+    return postWithEntityManager;
+  }
   public async getAllPhotos(): Promise<Photo[]> {
+    // const allProfiles = await this.profileRepository.find();
+    // const allProfilesAndPhotos = allProfiles.map(async (profile) => {
+    //   return await this.getPhotosById(profile.id);
+    // });
+    // console.log(allProfilesAndPhotos);
     return this.photoRepository.find();
   }
-
+  public async getProfilesAndPhotos() {
+    const result = await this.photoManager
+      .getRepository(Profile)
+      .createQueryBuilder('profile')
+      .leftJoinAndSelect('profile.photos', 'photo')
+      .getMany();
+    return result;
+  }
   // public async getPhotoById(id: string): Promise<Photo> {
   //   const photo = this.photoRepository.findOneBy({ id });
   //   if (!photo) throw new Error('Photo not found');
@@ -45,14 +65,18 @@ export class PhotoService {
     return this.photoRepository.save(myPhoto);
   }
   public async asignPhoto(profileId: string, photo: AssignPhotoDTO) {
-    console.log(profileId, photo);
-    return '';
-    // const myPhoto = await this.getPhotoById(photo.photoId);
-    // if (!myPhoto) throw new Error('Photo not found');
-    // const myProfile = await this.getProfileById(profileId);
-    // if (!myProfile) throw new Error('Profile not found');
-    // myPhoto.profile = myProfile;
-    // return this.photoRepository.update(photo.photoId, myPhoto);
+    // console.log(profileId, photo);
+    const myProfile = await this.getProfileById(profileId);
+    if (!myProfile) throw new Error('Profile not found');
+    // console.log(myProfile);
+    const myPhoto = await this.getPhotoById(photo.photoId);
+    if (!myPhoto) throw new Error('Photo not found');
+    // console.log(myPhoto);
+    const newPhoto = new Photo();
+    newPhoto.url = myPhoto.url;
+    newPhoto.profile = myProfile;
+    console.log(`El usuario ${myProfile.name} tiene el auto ${myPhoto.url}`);
+    return this.photoRepository.update(photo.photoId, newPhoto);
   }
   public async addPhoto(request: CreatePhotoDTO): Promise<Photo> {
     const foundProfile = await this.profileRepository.findOneBy({
