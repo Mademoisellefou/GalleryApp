@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreatePhotoDTO } from 'src/dto/photos.dto';
+import { CreatePhotoDTO, UpdatePhotoDTO } from 'src/dto/photos.dto';
 import { Photo } from 'src/entity/photos.entity';
 import { Repository } from 'typeorm';
 import { Profile } from 'src/entity/profiles.entity';
@@ -26,19 +26,23 @@ export class PhotoService {
   // // public async deletePhotoById(uuid: string): Promise<void> {
   // //   await this.photoRepository.delete(uuid);
   // // }
-
-  // public async updatePhoto(photo: CreatePhotoDTO): Promise<Photo> {
-  //   return this.photoRepository.save(photo);
-  // }
+  public async getPhotoById(id: string): Promise<Photo> {
+    const photo = this.photoRepository.findOneBy({ id });
+    if (!photo) throw new Error('photo not found');
+    return photo;
+  }
+  public async putPhotoById(id: string, photo: UpdatePhotoDTO) {
+    const myPhoto = await this.getPhotoById(id);
+    if (!myPhoto) throw new Error('Photo not found');
+    console.log(myPhoto);
+    myPhoto.url = photo.url;
+    return this.photoRepository.save(myPhoto);
+  }
   public async addPhoto(request: CreatePhotoDTO): Promise<Photo> {
     const foundProfile = await this.profileRepository.findOneBy({
       id: request.idprofile,
     });
-    if (!foundProfile) throw new Error('Photo not found');
-    // console.log(foundProfile);
-    // return this.photoRepository.find();
-    // newPhoto.url = request .url;
-    // newPhoto.profile = profile;
+    if (!foundProfile) throw new Error('Profile not found');
     const newPhoto = new Photo();
     newPhoto.url = request.url;
     newPhoto.profile = foundProfile;
