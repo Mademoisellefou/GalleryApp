@@ -4,6 +4,6 @@ export class CreateProfileDTO {
   photos: string[];
 }
 export class UpdateProfileDTO {
+  name: string;
   profileId: string;
-  photoId: string;
 }
