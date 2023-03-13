@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
-import Table from "@/components/Table";
-import { Box, Button, Modal } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import TableContainer from "@mui/material/TableContainer";
 type User = {
   id: string;
   name: string;
@@ -44,20 +53,25 @@ function Index() {
     // console.log("User Selected the Photo - ", event.target.value);
     setValuePhoto(event.target.value);
   };
-  const Asignar = (id: string) => {
-    AsignPhoto(id);
+  const Asignar = (id: string, idAuto: string) => {
+    AsignPhoto(id, idAuto);
   };
-  const AsignPhoto = async (id: string) => {
+  const AsignPhoto = async (id: string, idAuto: string) => {
+    console.log(`el id del Profile es ${id} id auto es ${idAuto}`);
     const res = await axios({
       method: "put",
       url: `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/photo/asign/${id}`,
       data: {
-        photoId: valuePhoto,
+        photoId: idAuto,
       },
     });
   };
+  const [currentProfile, setCurrentProfile] = useState<string>("");
   const [open, setOpen] = React.useState<boolean>(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = (id: string) => {
+    setCurrentProfile(id);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
   useEffect(() => {
     allUsers();
@@ -72,30 +86,32 @@ function Index() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="container">
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">usuario</th>
-              <th scope="col">asignar</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>usuario</TableCell>
+                  <TableCell>asignar</TableCell>
+                </TableRow>
+                </TableHead>
+          <TableBody>
             {profiles?.map((profile, index) => (
-              <tr key={index}>
-                <td>{profile.name}</td>
-                <td className="asignar">
+              <TableRow key={index}>
+                <TableCell>{profile.name}</TableCell>
+                <TableCell className="asignar">
                   <Button
                     color="primary"
                     variant="contained"
-                    onClick={handleOpen}
+                    onClick={() => handleOpen(profile.id)}
                   >
                     Asignar
                   </Button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+          </Table>
+        </TableContainer>
         <hr></hr>
         <br></br>
       </main>
@@ -105,21 +121,28 @@ function Index() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <TableContainer>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell scope="col">auto</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {photos?.map((photo, index) => (
+                  <TableRow
+                    onClick={() => {
+                      Asignar(currentProfile, photo.id);
+                    }}
+                    key={index}
+                  >
+                    <TableCell>{photo.url}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <Button onClick={handleClose}>Asignar</Button>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">auto</th>
-              </tr>
-            </thead>
-            <tbody>
-              {photos?.map((photo, index) => (
-                <tr key={index}>
-                  <td>{photo.url}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
           <hr></hr>
           <br></br>
         </Box>
