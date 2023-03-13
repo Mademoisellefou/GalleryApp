@@ -31,7 +31,7 @@ export class PhotoService {
     if (!photo) throw new Error('photo not found');
     return photo;
   }
-  public async putPhotoById(id: string, photo: UpdatePhotoDTO) {
+  public async updatePhoto(id: string, photo: UpdatePhotoDTO) {
     const myPhoto = await this.getPhotoById(id);
     if (!myPhoto) throw new Error('Photo not found');
     console.log(myPhoto);
