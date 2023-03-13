@@ -11,8 +11,6 @@ export class ProfileService {
     private profileRepository: Repository<Profile>,
   ) {}
 
-  
-
   // public async getProfileById(id: string): Promise<Profile> {
   //   const profile = this.profileRepository.findOneBy({ id });
   //   if (!profile) throw new Error('Profile not found');
@@ -29,21 +27,17 @@ export class ProfileService {
   public async postProfile(profile: CreateProfileDTO): Promise<Profile> {
     const newProfile = new Profile();
     newProfile.name = profile.name;
-    console.log(
-      `created ${newProfile}`
-    );
+    console.log(`created ${newProfile}`);
     return this.profileRepository.save(newProfile);
   }
-  public async updateProfile(profile: UpdateProfileDTO, id: string){
+  public async updateProfile(profile: UpdateProfileDTO, id: string) {
     const foundProfile = this.profileRepository.findOneBy({
-      id: id
+      id: id,
     });
     if (!foundProfile) throw new Error('Profile not found');
-    console.log(
-      `updated ${foundProfile}`
-    );
+    console.log(`updated ${foundProfile}`);
     const curProfile = new Profile();
     curProfile.name = profile.name;
-    return this.profileRepository.update(id,curProfile);
+    return this.profileRepository.update(id, curProfile);
   }
 }

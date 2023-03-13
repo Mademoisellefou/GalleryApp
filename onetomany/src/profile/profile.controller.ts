@@ -29,7 +29,10 @@ export class ProfileController {
     return this.profileService.postProfile(request);
   }
   @Put(':id')
-  async updateProfile(@Param('id') id: string, @Body() request: UpdateProfileDTO) {
+  async updateProfile(
+    @Param('id') id: string,
+    @Body() request: UpdateProfileDTO,
+  ) {
     return this.profileService.updateProfile(request, id);
   }
   // @Delete(':id')
