@@ -1,10 +1,7 @@
 export class CreatePhotoDTO {
-  id: string;
   url: string;
-  profile: string;
+  idprofile: string;
 }
 export class UpdatePhotoDTO {
-  id: string;
   url: string;
-  profile: string;
 }

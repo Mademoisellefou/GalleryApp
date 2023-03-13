@@ -34,9 +34,9 @@ export class ProfileService {
     );
     return this.profileRepository.save(newProfile);
   }
-  public async updateProfile(profile: UpdateProfileDTO){
+  public async updateProfile(profile: UpdateProfileDTO, id: string){
     const foundProfile = this.profileRepository.findOneBy({
-      id: profile.profileId,
+      id: id
     });
     if (!foundProfile) throw new Error('Profile not found');
     console.log(
@@ -44,6 +44,6 @@ export class ProfileService {
     );
     const curProfile = new Profile();
     curProfile.name = profile.name;
-    return this.profileRepository.update(profile.profileId,curProfile);
+    return this.profileRepository.update(id,curProfile);
   }
 }
